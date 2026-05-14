@@ -120,7 +120,7 @@ Rules:
     if (newBooking && business.google_calendar_token) {
       const { createCalendarEvent } = await import('@/lib/google-calendar')
       const eventId = await createCalendarEvent(
-        business.google_calendar_token as Record<string, unknown>,
+        business.google_calendar_token as unknown as Record<string, unknown>,
         {
           id: newBooking.id,
           customer_name: newBooking.customer_name,
