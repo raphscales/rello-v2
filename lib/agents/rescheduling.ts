@@ -1,5 +1,6 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { createServiceClient } from '@/lib/supabase/server'
+import { updateCalendarEvent, deleteCalendarEvent } from '@/lib/google-calendar'
 import type {
   Business, InboundEvent, Conversation, Agent, Message,
   OrchestratorDecision,
@@ -92,13 +93,20 @@ Rules:
     return text.trim()
   }
 
-  // Handle booking mutations
+  // Handle booking mutations + Google Calendar sync
   if (parsed.bookingAction && upcomingBooking) {
+    const tokens = business.google_calendar_token as Record<string, unknown> | null
+    const eventId = upcomingBooking.google_calendar_event_id as string | null
+
     if (parsed.bookingAction.type === 'cancel') {
       await supabase
         .from('bookings')
         .update({ status: 'cancelled' })
         .eq('id', upcomingBooking.id)
+
+      if (tokens && eventId) {
+        await deleteCalendarEvent(tokens, eventId)
+      }
     } else if (parsed.bookingAction.type === 'reschedule' && parsed.bookingAction.scheduledAt) {
       await supabase
         .from('bookings')
@@ -107,6 +115,17 @@ Rules:
           scheduled_at: parsed.bookingAction.scheduledAt,
         })
         .eq('id', upcomingBooking.id)
+
+      if (tokens && eventId) {
+        await updateCalendarEvent(tokens, eventId, {
+          customer_name: upcomingBooking.customer_name,
+          customer_phone: upcomingBooking.customer_phone,
+          service: upcomingBooking.service,
+          scheduled_at: parsed.bookingAction.scheduledAt,
+          duration_minutes: upcomingBooking.duration_minutes ?? 60,
+          notes: upcomingBooking.notes,
+        }, business.timezone)
+      }
     }
   }
 
