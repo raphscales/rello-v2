@@ -70,7 +70,7 @@ export default function LiveActivityFeed({
           if (msg.direction !== 'outbound') return
           const preview = msg.body.length > 70 ? msg.body.slice(0, 70) + '…' : msg.body
           setItems(prev =>
-            [{ id: msg.id, type: 'message', description: `"${preview}"`, at: msg.sent_at }, ...prev].slice(0, 20)
+            [{ id: msg.id, type: 'message' as const, description: `"${preview}"`, at: msg.sent_at }, ...prev].slice(0, 20)
           )
         }
       )
@@ -93,7 +93,7 @@ export default function LiveActivityFeed({
           const who = b.customer_name ?? b.customer_phone
           const what = b.service ? ` · ${b.service}` : ''
           setItems(prev =>
-            [{ id: b.id, type: 'booking', description: `${who}${what}`, at: b.created_at }, ...prev].slice(0, 20)
+            [{ id: b.id, type: 'booking' as const, description: `${who}${what}`, at: b.created_at }, ...prev].slice(0, 20)
           )
         }
       )
@@ -112,7 +112,7 @@ export default function LiveActivityFeed({
             created_at: string
           }
           setItems(prev =>
-            [{ id: c.id, type: 'conversation', description: c.customer_phone, at: c.created_at }, ...prev].slice(0, 20)
+            [{ id: c.id, type: 'conversation' as const, description: c.customer_phone, at: c.created_at }, ...prev].slice(0, 20)
           )
         }
       )
