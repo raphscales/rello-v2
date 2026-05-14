@@ -4,10 +4,10 @@ import { useState, useRef, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Agent, AgentType } from '@/lib/types'
 
-const agentLabels: Record<string, { title: string; description: string }> = {
-  follow_up:    { title: 'Follow-up Agent',    description: 'Responds to missed calls within 60s' },
-  booking:      { title: 'Booking Agent',       description: 'Handles appointment scheduling' },
-  rescheduling: { title: 'Rescheduling Agent',  description: 'Manages changes and cancellations' },
+const agentDescriptions: Record<string, string> = {
+  follow_up:    'Responds to missed calls within 60s',
+  booking:      'Handles appointment scheduling',
+  rescheduling: 'Manages changes and cancellations',
 }
 
 interface ChatMessage {
@@ -32,6 +32,7 @@ function incrementTestCount(agentId: string) {
 
 export default function AgentCard({ agent }: { agent: Agent }) {
   const [isActive, setIsActive] = useState(agent.is_active)
+  const [name, setName] = useState(agent.name)
   const [brief, setBrief] = useState(agent.brief)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
@@ -46,7 +47,7 @@ export default function AgentCard({ agent }: { agent: Agent }) {
   const chatEndRef = useRef<HTMLDivElement>(null)
 
   const supabase = createClient()
-  const info = agentLabels[agent.type] ?? { title: agent.name, description: '' }
+  const description = agentDescriptions[agent.type] ?? ''
 
   useEffect(() => {
     if (testOpen) setRemaining(getRemainingTests(agent.id))
@@ -64,7 +65,7 @@ export default function AgentCard({ agent }: { agent: Agent }) {
 
   async function saveBrief() {
     setSaving(true)
-    await supabase.from('agents').update({ brief }).eq('id', agent.id)
+    await supabase.from('agents').update({ name, brief }).eq('id', agent.id)
     setSaving(false)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
@@ -119,8 +120,12 @@ export default function AgentCard({ agent }: { agent: Agent }) {
       <div className="bg-white rounded-xl border border-gray-200 p-5">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h3 className="text-sm font-semibold text-gray-900">{info.title}</h3>
-            <p className="text-xs text-gray-500 mt-0.5">{info.description}</p>
+            <input
+              value={name}
+              onChange={e => setName(e.target.value)}
+              className="text-sm font-semibold text-gray-900 bg-transparent border-0 p-0 focus:outline-none focus:ring-0 w-full"
+            />
+            <p className="text-xs text-gray-500 mt-0.5">{description}</p>
           </div>
           {/* Toggle */}
           <button
@@ -156,7 +161,7 @@ export default function AgentCard({ agent }: { agent: Agent }) {
             </button>
             <button
               onClick={saveBrief}
-              disabled={saving || brief === agent.brief}
+              disabled={saving || (brief === agent.brief && name === agent.name)}
               className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
             >
               {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save brief'}
@@ -172,7 +177,7 @@ export default function AgentCard({ agent }: { agent: Agent }) {
             {/* Modal header */}
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
               <div>
-                <h3 className="text-sm font-semibold text-gray-900">Test — {info.title}</h3>
+                <h3 className="text-sm font-semibold text-gray-900">Test — {name}</h3>
                 <p className="text-xs text-gray-400 mt-0.5">
                   Real AI · {remaining} test{remaining !== 1 ? 's' : ''} remaining today
                 </p>

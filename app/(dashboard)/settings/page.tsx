@@ -41,16 +41,19 @@ export default async function SettingsPage() {
           <h2 className="text-sm font-semibold text-gray-900 mb-4">Trading hours</h2>
           {business?.trading_hours ? (
             <div className="space-y-2">
-              {Object.entries(business.trading_hours).map(([day, hours]) => (
-                <div key={day} className="flex justify-between text-sm">
-                  <span className="capitalize text-gray-700 font-medium">{day}</span>
-                  {hours ? (
-                    <span className="text-gray-500">{(hours as { open: string; close: string }).open} – {(hours as { open: string; close: string }).close}</span>
-                  ) : (
-                    <span className="text-gray-400">Closed</span>
-                  )}
-                </div>
-              ))}
+              {(['monday','tuesday','wednesday','thursday','friday','saturday','sunday'] as const).map(day => {
+                const hours = (business.trading_hours as Record<string, { open: string; close: string } | null>)[day]
+                return (
+                  <div key={day} className="flex justify-between text-sm">
+                    <span className="capitalize text-gray-700 font-medium">{day}</span>
+                    {hours ? (
+                      <span className="text-gray-500">{hours.open} – {hours.close}</span>
+                    ) : (
+                      <span className="text-gray-400">Closed</span>
+                    )}
+                  </div>
+                )
+              })}
             </div>
           ) : (
             <p className="text-sm text-gray-400">No trading hours set.</p>
