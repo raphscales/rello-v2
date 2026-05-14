@@ -118,7 +118,7 @@ export default function OnboardingWizard() {
             <div className="space-y-4">
               <div>
                 <h2 className="text-lg font-semibold text-gray-900">Trading hours</h2>
-                <p className="text-sm text-gray-500 mt-0.5">Your agents won't book outside these hours.</p>
+                <p className="text-sm text-gray-500 mt-0.5">Your agents won&apos;t book outside these hours.</p>
               </div>
               <div className="space-y-3">
                 {DAYS.map(day => (
