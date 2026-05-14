@@ -12,16 +12,18 @@ export default async function DashboardLayout({
 
   if (!user) redirect('/login')
 
-  // Fetch the business linked to this user
   const { data: business } = await supabase
     .from('businesses')
     .select('id, name')
     .eq('owner_id', user.id)
     .single()
 
+  // No business yet — send to onboarding wizard
+  if (!business) redirect('/onboarding')
+
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <Sidebar businessName={business?.name ?? 'Your Business'} />
+      <Sidebar businessName={business.name} />
       <main className="flex-1 min-w-0 p-8">
         {children}
       </main>
