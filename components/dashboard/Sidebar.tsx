@@ -13,7 +13,7 @@ const nav = [
   { href: '/agents',        label: 'Agents',        icon: Bot },
 ]
 
-export default function Sidebar({ businessName }: { businessName: string }) {
+export default function Sidebar({ businessName, isAdminView }: { businessName: string; isAdminView?: boolean }) {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
@@ -30,6 +30,9 @@ export default function Sidebar({ businessName }: { businessName: string }) {
       <div className="px-5 py-5 border-b border-gray-200">
         <span className="text-indigo-600 font-bold text-lg tracking-tight">◈ rello</span>
         <p className="text-xs text-gray-400 mt-1 truncate">{businessName}</p>
+        {isAdminView && (
+          <span className="text-[10px] font-semibold text-amber-700 bg-amber-100 px-1.5 py-0.5 rounded mt-1 inline-block">Admin view</span>
+        )}
       </div>
 
       {/* Main nav */}
