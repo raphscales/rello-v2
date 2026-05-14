@@ -2,7 +2,8 @@ import { createClient } from '@/lib/supabase/server'
 
 export const dynamic = 'force-dynamic'
 
-export default async function SettingsPage() {
+export default async function SettingsPage({ searchParams }: { searchParams: { gcal?: string } }) {
+  const gcalParam = searchParams.gcal ?? null
   const supabase = await createClient()
 
   const { data: business } = await supabase
@@ -14,6 +15,17 @@ export default async function SettingsPage() {
 
   return (
     <div>
+      {gcalParam === 'connected' && (
+        <div className="mb-4 px-4 py-3 rounded-lg bg-green-50 border border-green-200 text-sm text-green-800">
+          Google Calendar connected successfully.
+        </div>
+      )}
+      {gcalParam === 'error' && (
+        <div className="mb-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-sm text-red-800">
+          Could not connect Google Calendar. Please try again.
+        </div>
+      )}
+
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
         <p className="text-sm text-gray-500 mt-1">Business info and integrations</p>
