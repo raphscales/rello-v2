@@ -86,7 +86,8 @@ Rules:
 
   let parsed: { reply: string; bookingAction?: { type: string; bookingId?: string; scheduledAt?: string } | null; escalate: boolean }
   try {
-    parsed = JSON.parse(text)
+    const clean = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim()
+    parsed = JSON.parse(clean)
   } catch {
     return text.trim()
   }

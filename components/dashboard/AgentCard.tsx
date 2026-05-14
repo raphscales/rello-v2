@@ -123,7 +123,7 @@ export default function AgentCard({ agent }: { agent: Agent }) {
             <input
               value={name}
               onChange={e => setName(e.target.value)}
-              className="text-sm font-semibold text-gray-900 bg-transparent border-0 p-0 focus:outline-none focus:ring-0 w-full"
+              className="text-sm font-semibold text-gray-900 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-indigo-500 focus:outline-none px-0 py-0.5 w-full transition-colors"
             />
             <p className="text-xs text-gray-500 mt-0.5">{description}</p>
           </div>
