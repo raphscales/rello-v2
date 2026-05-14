@@ -36,7 +36,7 @@ async function getCalendarClient(tokens: Record<string, unknown>) {
       await supabase
         .from('businesses')
         .update({ google_calendar_token: merged })
-        .eq('google_calendar_token->>access_token', (tokens as any).access_token)
+        .eq('google_calendar_token->>access_token', (tokens as Record<string, string>).access_token)
     }
   })
 

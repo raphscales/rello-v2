@@ -28,6 +28,7 @@ export async function createClient() {
 
 // Service role client — bypasses RLS. Use ONLY in trusted server-side code.
 export function createServiceClient() {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { createClient } = require('@supabase/supabase-js')
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

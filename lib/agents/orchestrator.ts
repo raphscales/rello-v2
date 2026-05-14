@@ -148,7 +148,7 @@ async function decide({
   event,
   business,
   agents,
-  conversation,
+  conversation: _conversation,
   recentMessages,
 }: {
   event: InboundEvent

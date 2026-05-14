@@ -43,7 +43,7 @@ export default async function SettingsPage() {
                 <div key={day} className="flex justify-between text-sm">
                   <span className="capitalize text-gray-700 font-medium">{day}</span>
                   {hours ? (
-                    <span className="text-gray-500">{(hours as any).open} – {(hours as any).close}</span>
+                    <span className="text-gray-500">{(hours as { open: string; close: string }).open} – {(hours as { open: string; close: string }).close}</span>
                   ) : (
                     <span className="text-gray-400">Closed</span>
                   )}

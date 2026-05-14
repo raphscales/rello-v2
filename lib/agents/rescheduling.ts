@@ -20,7 +20,7 @@ export async function runReschedulingAgent({
   event,
   business,
   agents,
-  conversation,
+  conversation: _conversation,
   recentMessages,
   decision,
 }: ReschedulingInput): Promise<string | null> {

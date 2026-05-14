@@ -16,16 +16,11 @@ export async function runFollowUpAgent({
   event,
   business,
   agents,
-  conversation,
   recentMessages,
   decision,
 }: FollowUpInput): Promise<string | null> {
   const agent = agents.find(a => a.type === 'follow_up')
   if (!agent) return null
-
-  const history = recentMessages
-    .map(m => `[${m.direction === 'inbound' ? 'Customer' : 'Agent'}]: ${m.body}`)
-    .join('\n')
 
   const systemPrompt = `${agent.brief}
 
