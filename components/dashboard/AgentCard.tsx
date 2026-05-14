@@ -34,6 +34,9 @@ export default function AgentCard({ agent }: { agent: Agent }) {
   const [isActive, setIsActive] = useState(agent.is_active)
   const [name, setName] = useState(agent.name)
   const [brief, setBrief] = useState(agent.brief)
+  const [editing, setEditing] = useState(false)
+  const [editName, setEditName] = useState(agent.name)
+  const [editBrief, setEditBrief] = useState(agent.brief)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
 
@@ -63,11 +66,24 @@ export default function AgentCard({ agent }: { agent: Agent }) {
     await supabase.from('agents').update({ is_active: newVal }).eq('id', agent.id)
   }
 
-  async function saveBrief() {
+  function startEdit() {
+    setEditName(name)
+    setEditBrief(brief)
+    setEditing(true)
+  }
+
+  function cancelEdit() {
+    setEditing(false)
+  }
+
+  async function saveEdit() {
     setSaving(true)
-    await supabase.from('agents').update({ name, brief }).eq('id', agent.id)
+    await supabase.from('agents').update({ name: editName, brief: editBrief }).eq('id', agent.id)
+    setName(editName)
+    setBrief(editBrief)
     setSaving(false)
     setSaved(true)
+    setEditing(false)
     setTimeout(() => setSaved(false), 2000)
   }
 
@@ -118,19 +134,15 @@ export default function AgentCard({ agent }: { agent: Agent }) {
   return (
     <>
       <div className="bg-white rounded-xl border border-gray-200 p-5">
+        {/* Header: name + toggle always visible */}
         <div className="flex items-start justify-between mb-4">
-          <div>
-            <input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className="text-sm font-semibold text-gray-900 bg-transparent border-b border-transparent hover:border-gray-300 focus:border-indigo-500 focus:outline-none px-0 py-0.5 w-full transition-colors"
-            />
+          <div className="flex-1 min-w-0 pr-4">
+            <p className="text-sm font-semibold text-gray-900">{name}</p>
             <p className="text-xs text-gray-500 mt-0.5">{description}</p>
           </div>
-          {/* Toggle */}
           <button
             onClick={toggleActive}
-            className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+            className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${
               isActive ? 'bg-indigo-600' : 'bg-gray-200'
             }`}
           >
@@ -140,34 +152,60 @@ export default function AgentCard({ agent }: { agent: Agent }) {
           </button>
         </div>
 
-        <div>
-          <label className="block text-xs font-medium text-gray-700 mb-1.5">
-            Agent brief
-            <span className="ml-1 font-normal text-gray-400">(write this like you&apos;re briefing a staff member)</span>
-          </label>
-          <textarea
-            value={brief}
-            onChange={e => setBrief(e.target.value)}
-            rows={4}
-            className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-            placeholder="e.g. You are the follow-up agent for Auckland HVAC. When someone misses a call, text them within 60 seconds..."
-          />
-          <div className="flex items-center justify-between mt-2">
-            <button
-              onClick={openTest}
-              className="text-xs font-medium text-gray-500 hover:text-indigo-600 transition-colors"
-            >
-              Test agent →
-            </button>
-            <button
-              onClick={saveBrief}
-              disabled={saving || (brief === agent.brief && name === agent.name)}
-              className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-            >
-              {saving ? 'Saving…' : saved ? 'Saved ✓' : 'Save brief'}
-            </button>
+        {editing ? (
+          <div className="space-y-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">Name</label>
+              <input
+                value={editName}
+                onChange={e => setEditName(e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-700 mb-1">
+                Agent brief
+                <span className="ml-1 font-normal text-gray-400">(write this like you&apos;re briefing a staff member)</span>
+              </label>
+              <textarea
+                value={editBrief}
+                onChange={e => setEditBrief(e.target.value)}
+                rows={4}
+                className="w-full px-3 py-2.5 text-sm border border-gray-200 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                placeholder="e.g. You are the follow-up agent for Auckland HVAC..."
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <button onClick={cancelEdit} className="text-xs text-gray-400 hover:text-gray-600 transition-colors">
+                Cancel
+              </button>
+              <button
+                onClick={saveEdit}
+                disabled={saving}
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+              >
+                {saving ? 'Saving…' : 'Save'}
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div>
+            <div className="text-sm text-gray-600 bg-gray-50 rounded-lg px-3 py-2.5 min-h-[72px] whitespace-pre-wrap">
+              {brief || <span className="text-gray-400 italic">No brief set</span>}
+            </div>
+            <div className="flex items-center justify-between mt-2">
+              <button onClick={openTest} className="text-xs font-medium text-gray-500 hover:text-indigo-600 transition-colors">
+                Test agent →
+              </button>
+              <div className="flex items-center gap-3">
+                {saved && <span className="text-xs text-green-600">Saved ✓</span>}
+                <button onClick={startEdit} className="text-xs font-semibold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors">
+                  Edit
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Test agent modal */}
