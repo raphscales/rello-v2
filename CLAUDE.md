@@ -42,13 +42,27 @@ Next.js 14 App Router + TypeScript SaaS platform. AI-powered booking and follow-
 - `components/dashboard/AgentCard.tsx` — agent toggle + brief editor + Test modal ✓
 - `components/dashboard/OverrideReplyPanel.tsx` — override/reply client component ✓
 
-## What still needs building (pick up from here)
-1. `app/api/google-calendar/connect` + `disconnect` routes (OAuth flow)
-2. Google Calendar: auto-create/update/delete events when bookings change
-3. Bookings calendar toggle (month grid view)
-4. Resend email: booking confirmations + reminders
-5. Stripe billing (Phase 6)
-6. ✓ Deployed to Vercel — https://rello-v2.vercel.app
+## What's done ✓
+- Full dashboard UI (conversations, bookings, agents, settings, admin)
+- SMS webhook (ClickSend) + missed call webhook (Twilio) with signature validation
+- AI orchestrator (Sonnet) + 3 leaf agents (Haiku): follow-up, booking, rescheduling
+- Override & reply from dashboard
+- Test agent modal (real AI, no DB writes)
+- Deployed to Vercel — https://rello-v2.vercel.app
+- Test business seeded (Raphael's account, 3 agents)
+- Google Calendar OAuth routes built (connect/disconnect/callback)
+- Calendar event auto-created when booking agent creates a booking
+
+## Known issues / in progress
+- Vercel build failing — ESLint errors fixed locally (commit 39d0fb0) but deployment `En46vvrQV` errored in 2s (unknown reason — check build logs)
+- `supabase/server.ts` uses `require()` for service client — ESLint disable comment added as workaround
+
+## What still needs building
+1. ✓ Google Calendar OAuth flow — built, needs Vercel build to pass to test
+2. Resend email: booking confirmations + reminders to customer
+3. Bookings calendar month grid view (toggle on bookings page)
+4. Stripe billing (Phase 6)
+5. Client onboarding flow (admin creates business for new client)
 
 ## New env vars needed (add to .env.local.example)
 - `CLICKSEND_WEBHOOK_SECRET` — shared secret appended as ?secret= to ClickSend webhook URL
