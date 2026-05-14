@@ -1,6 +1,8 @@
 import { createClient } from '@/lib/supabase/server'
 import AgentCard from '@/components/dashboard/AgentCard'
 
+export const dynamic = 'force-dynamic'
+
 export default async function AgentsPage() {
   const supabase = await createClient()
 
