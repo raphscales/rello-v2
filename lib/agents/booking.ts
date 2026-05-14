@@ -140,6 +140,20 @@ Rules:
           .eq('id', newBooking.id)
       }
     }
+
+    // Send confirmation email to business owner
+    if (business.notification_email) {
+      const { sendBookingConfirmation } = await import('@/lib/email')
+      await sendBookingConfirmation({
+        to: business.notification_email,
+        businessName: business.name,
+        customerName: newBooking.customer_name,
+        customerPhone: newBooking.customer_phone,
+        service: newBooking.service,
+        scheduledAt: newBooking.scheduled_at,
+        timezone: business.timezone,
+      }).catch(err => console.error('[email] confirmation error:', err))
+    }
   }
 
   return parsed.reply ?? null
