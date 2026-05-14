@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { inviteClient, switchToBusiness } from './actions'
-import { ExternalLink, Mail, ArrowRight } from 'lucide-react'
+import { Mail, ArrowRight } from 'lucide-react'
 
 interface Business {
   id: string
@@ -66,7 +66,7 @@ export default function AdminPanel({ businesses }: { businesses: Business[] }) {
           </button>
         </form>
         {inviteResult?.success && (
-          <p className="text-sm text-green-700 mt-2">✓ Invite sent. They'll receive a magic link to sign up.</p>
+          <p className="text-sm text-green-700 mt-2">✓ Invite sent. They&apos;ll receive a magic link to sign up.</p>
         )}
         {inviteResult?.error && (
           <p className="text-sm text-red-600 mt-2">Error: {inviteResult.error}</p>

@@ -49,7 +49,7 @@ export default function OnboardingWizard() {
       {/* Logo */}
       <div className="text-center mb-8">
         <span className="text-2xl font-bold text-indigo-600 tracking-tight">◈ rello</span>
-        <p className="text-gray-500 text-sm mt-1">Let's set up your business</p>
+        <p className="text-gray-500 text-sm mt-1">Let&apos;s set up your business</p>
       </div>
 
       {/* Step indicators */}
@@ -163,9 +163,9 @@ export default function OnboardingWizard() {
                 <Check className="w-7 h-7 text-indigo-600" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-gray-900">You're all set, {name}!</h2>
+                <h2 className="text-lg font-semibold text-gray-900">You&apos;re all set, {name}!</h2>
                 <p className="text-sm text-gray-500 mt-1">
-                  We've created your business and set up 3 AI agents — follow-up, booking, and rescheduling. They're ready to go.
+                  We&apos;ve created your business and set up 3 AI agents — follow-up, booking, and rescheduling. They&apos;re ready to go.
                 </p>
               </div>
               <div className="bg-gray-50 rounded-xl p-4 text-left space-y-2">
