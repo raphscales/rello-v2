@@ -4,13 +4,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { LayoutDashboard, MessageSquare, CalendarDays, Bot, Settings, LogOut } from 'lucide-react'
+import { LayoutDashboard, MessageSquare, CalendarDays, Bot, BarChart2, Settings, LogOut } from 'lucide-react'
 
 const nav = [
   { href: '/',              label: 'Dashboard',     icon: LayoutDashboard },
   { href: '/conversations', label: 'Conversations', icon: MessageSquare },
   { href: '/bookings',      label: 'Bookings',      icon: CalendarDays },
   { href: '/agents',        label: 'Agents',        icon: Bot },
+  { href: '/analytics',    label: 'Analytics',     icon: BarChart2 },
 ]
 
 export default function Sidebar({ businessName, isAdminView }: { businessName: string; isAdminView?: boolean }) {
